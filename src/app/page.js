@@ -1,34 +1,23 @@
 "use client"
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useSearchParams } from 'next/navigation';
+import BookList from './components/Booklist';
+
 import Filter from './components/Filter';
+import Pagination from './components/Pagination';
 
-export default function Home({ books }) {
-  const [loading, setLoading] = useState(false);
-  const [filteredBooks, setFilteredBooks] = useState(books);
+export default function Page() {
+  const searchParams = useSearchParams();
+  const page = searchParams.get('page') || 1;
+  const filter = searchParams.get('filter') || '';
 
-  useEffect(() => {
-    const filterBooks = async () => {
-      setLoading(true);
-      setLoading(false);
-      setFilteredBooks(filteredData); 
-    };
 
-    filterBooks();
-  }, []);
+  const totalPages = 10;
 
   return (
     <div>
       <Filter />
-      {loading ? (
-        <div>Loading...</div>
-      ) : (
-        <div>
-          {filteredBooks.map((book) => (
-            <div key={book.id}>{book.title}</div>
-          ))}
-        </div>
-      )}
+      <BookList filter={filter} page={page} />
+      <Pagination totalPages={totalPages} />
     </div>
   );
 }
